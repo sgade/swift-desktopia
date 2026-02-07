@@ -1,0 +1,15 @@
+{
+  "originHash" : "49ce0ad11d177f836673690bd97a15ba087fdfc04746b62f8301af066401ecee",
+  "pins" : [
+    {
+      "identity" : "swiftserial",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sgade/SwiftSerial",
+      "state" : {
+        "revision" : "c33b4400f0cb301cf26ab98220100ed2011bdc38",
+        "version" : "0.2.0"
+      }
+    }
+  ],
+  "version" : 3
+}

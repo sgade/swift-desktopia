@@ -1,0 +1,21 @@
+name: Build package
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: swift-actions/setup-swift@v3
+        with:
+          skip-verify-signature: true # TODO: this is broken in v3, Beta 1
+
+      - name: Swift build
+        run: swift build --configuration release

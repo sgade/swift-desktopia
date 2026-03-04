@@ -1,6 +1,6 @@
 # 🖥️ swift-desktopia
 
-Control your [Desktopia Pro X](https://www.ergotopia.de/ergonomie-shop/hoehenverstellbarer-schreibtisch/desktopia-pro-elektrisch-memoryschalter) from Swift.
+Control your [Desktopia Pro X](https://www.ergotopia.de/ergonomie-shop/hoehenverstellbarer-schreibtisch/desktopia-pro-x) from Swift.
 
 ## 🚀 Getting Started
 
@@ -14,10 +14,13 @@ let package = Package(
         .package(url: "https://github.com/sgade/swift-desktopia", from: "1.0.0"),
     ],
     targets: [
-        .executableTarget(name: "<command-line-tool>", dependencies: [
-            // other dependencies
-            .product(name: "DesktopiaProX", package: "swift-desktopia"),
-        ]),
+        .executableTarget(
+            name: "<your target>",
+            dependencies: [
+                // other dependencies
+                .product(name: "DesktopiaProX", package: "swift-desktopia"),
+            ]
+        ),
         // other targets
     ]
 )

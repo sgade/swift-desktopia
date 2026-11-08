@@ -33,26 +33,22 @@ extension SerialPort {
 
         return AsyncStream { continuation in
             let readingTask = Task(name: "Serial: Reading bytes") {
-                var buffer: [UInt8] = []
+                var reader = FrameReader()
 
                 for await byte in stream {
                     guard !Task.isCancelled else {
                         break
                     }
-                    buffer.append(byte)
 
-                    guard byte == .commandEndByte else {
-                        continue
+                    for frame in reader.append(byte) {
+                        do {
+                            let command = try Command(from: frame)
+
+                            continuation.yield(command)
+                        } catch {
+                            // error ignored
+                        }
                     }
-
-                    do {
-                        let command = try Command(from: buffer)
-
-                        continuation.yield(command)
-                    } catch {
-                        // error ignored
-                    }
-                    buffer.removeAll()
                 }
             }
 

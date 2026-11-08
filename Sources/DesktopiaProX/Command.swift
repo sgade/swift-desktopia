@@ -111,7 +111,6 @@ public extension Command {
         Command(
             id: .app(.showStatus),
             data: [
-                CommandID.App.showStatus.rawValue,
                 0x00,
                 CommandID.App.showStatus.rawValue
             ]
@@ -203,7 +202,6 @@ public extension Command {
         Command(
             id: .app(position),
             data: [
-                position.rawValue,
                 0x00,
                 position.rawValue
             ]

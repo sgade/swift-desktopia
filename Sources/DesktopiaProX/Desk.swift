@@ -27,6 +27,8 @@ public actor Desk {
 
     private let heartbeatInterval: TimeInterval = 5
 
+    private let commandRepeatDelay: Duration = .milliseconds(20)
+
     private var heartbeatTask: Task<Void, any Error>?
 
     /// Creates a new desk instance.
@@ -63,7 +65,7 @@ public extension Desk {
         if keepAlive {
             heartbeatTask = Task(name: "Desk heartbeat") {
                 repeat {
-                    try send(command: .heartbeat)
+                    try await send(command: .heartbeat)
                     try await Task.sleep(for: .seconds(heartbeatInterval))
                 } while !Task.isCancelled
             }
@@ -83,7 +85,18 @@ public extension Desk {
 
 public extension Desk {
 
-    func send(command: Command) throws {
+    /// Sends the command to the desk.
+    ///
+    /// The protocol requires that the desk gets each command two times, except the heartbeat. During the delay
+    /// between the two writes, other commands can run. This has no effect, because the desk also gets them two times.
+    func send(command: Command) async throws {
+        _ = try serial.write(command: command)
+
+        if case .app(.heartbeat) = command.id {
+            return
+        }
+
+        try await Task.sleep(for: commandRepeatDelay)
         _ = try serial.write(command: command)
     }
 

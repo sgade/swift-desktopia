@@ -41,6 +41,42 @@ struct DeskTests {
         try await desk.disconnect()
     }
 
+    // MARK: Sending
+
+    @Test func writesACommandTwoTimes() async throws {
+        let terminal = try PseudoTerminal()
+        let desk = Desk(port: terminal.devicePath, keepAlive: false)
+        try await desk.connect()
+
+        let sending = Task {
+            try await desk.send(command: .moveUp)
+        }
+        let first = try terminal.receive(count: 6, timeoutInMilliseconds: 1000)
+        let start = ContinuousClock.now
+        let second = try terminal.receive(count: 6, timeoutInMilliseconds: 1000)
+        let gap = start.duration(to: .now)
+        try await sending.value
+
+        #expect(first == Command.moveUp.buildFrame())
+        #expect(second == Command.moveUp.buildFrame())
+        #expect(gap >= .milliseconds(15))
+        try await desk.disconnect()
+    }
+
+    @Test func writesAHeartbeatOneTime() async throws {
+        let terminal = try PseudoTerminal()
+        let desk = Desk(port: terminal.devicePath, keepAlive: false)
+        try await desk.connect()
+
+        try await desk.send(command: .heartbeat)
+
+        #expect(try terminal.receive(count: 10) == Command.heartbeat.buildFrame())
+        #expect(throws: PseudoTerminal.Failure.timedOut) {
+            try terminal.receive(count: 1, timeoutInMilliseconds: 100)
+        }
+        try await desk.disconnect()
+    }
+
     // MARK: Lost device
 
     @Test func commandStreamEndsWhenTheDeviceIsLost() async throws {

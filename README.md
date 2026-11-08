@@ -68,8 +68,11 @@ try await desk.send(command: .showStatus)
 
 ## 📜 The Desktopia Pro X protocol
 
-The protocol has been [reverse engineered](https://www.sgade.de/blog/2023-07-13-desktopia-prox-smartcontrol/) from the [official app (beta)](https://www.ergotopia.de/desktopia-app).
+The protocol has been [reverse engineered](https://www.sgade.de/blog/2023-07-13-desktopia-prox-smartcontrol/) from the fromer official app (now deprecated).
+I have also verified the correctness via a protocol reference from Ergotopia directly.
 Contributions and corrections are welcome.
+
+There is no guarantee for the correctness nor harmlessness of the implementation.
 
 # License
 

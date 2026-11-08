@@ -41,4 +41,31 @@ struct DeskTests {
         try await desk.disconnect()
     }
 
+    // MARK: Lost device
+
+    @Test func commandStreamEndsWhenTheDeviceIsLost() async throws {
+        let terminal = try PseudoTerminal()
+        let desk = Desk(port: terminal.devicePath, keepAlive: false)
+        try await desk.connect()
+        let commands = try await desk.readCommands()
+
+        terminal.disconnect()
+
+        #expect(await ends(commands))
+        try await desk.disconnect()
+    }
+
+    @Test func sendingThrowsWhenTheDeviceIsLost() async throws {
+        let terminal = try PseudoTerminal()
+        let desk = Desk(port: terminal.devicePath, keepAlive: false)
+        try await desk.connect()
+
+        terminal.disconnect()
+
+        await #expect(throws: (any Error).self) {
+            try await desk.send(command: .moveUp)
+        }
+        try await desk.disconnect()
+    }
+
 }

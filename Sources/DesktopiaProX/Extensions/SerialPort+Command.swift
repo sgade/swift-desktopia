@@ -18,7 +18,11 @@ extension SerialPort {
     /// - Returns: Number of bytes written.
     func write(command: Command) throws -> Int {
         var buffer = command.buildFrame()
-        return try writeBytes(from: &buffer, size: buffer.count)
+        let bytesWritten = try writeBytes(from: &buffer, size: buffer.count)
+        guard bytesWritten == buffer.count else {
+            throw PortError.deviceNotConnected
+        }
+        return bytesWritten
     }
 
 }
@@ -50,6 +54,7 @@ extension SerialPort {
                         }
                     }
                 }
+                continuation.finish()
             }
 
             continuation.onTermination = { _ in

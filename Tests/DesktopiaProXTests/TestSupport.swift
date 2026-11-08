@@ -41,3 +41,11 @@ func firstElement<Element: Sendable>(of stream: AsyncStream<Element>) async -> E
         await stream.first { _ in true }
     } ?? nil
 }
+
+/// Returns `true` if the stream ends before the time limit.
+func ends<Element: Sendable>(_ stream: AsyncStream<Element>) async -> Bool {
+    let result: Void? = await withTimeLimit {
+        for await _ in stream {}
+    }
+    return result != nil
+}

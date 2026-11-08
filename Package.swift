@@ -22,6 +22,10 @@ let package = Package(
             dependencies: [
                 .product(name: "SwiftSerial", package: "SwiftSerial")
             ]
+        ),
+        .testTarget(
+            name: "DesktopiaProXTests",
+            dependencies: ["DesktopiaProX"]
         )
     ]
 )

@@ -31,10 +31,19 @@ types:
         enum: desk_command
         doc: The command identifier form the desk.
         if: header == 0xF2
-      - id: data
+      - id: data_length
         type: u1
-        repeat: until
-        repeat-until: _ == 0x7E
+      - id: data
+        size: data_length
+        doc: |
+          The data of the command. For height_info, a real desk sends three
+          bytes: the high byte and the low byte of the height in millimeters,
+          and the byte 0x07. The protocol document does not show the last byte.
+      - id: checksum
+        type: u1
+        doc: The lower 8 bits of the sum of the command id, data_length and data.
+      - id: end
+        contents: [0x7E]
     enums:
       source:
         0xF1: app
